@@ -17,6 +17,10 @@ public class PersonService {
     }
 
     public String save(PersonDTO personDTO) throws PersonConflictException {
+        if(!repository.findByCpf(personDTO.getCpf()).equals(null))
+            throw new PersonConflictException();
+
+
         return null;
     }
 }
