@@ -5,7 +5,8 @@ import org.dio.desafio.enums.PhoneType;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
