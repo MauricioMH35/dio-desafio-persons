@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @EqualsAndHashCode
 @ToString
+@Builder
 @Entity
 @Table(name = "Persons")
 public class Person {
