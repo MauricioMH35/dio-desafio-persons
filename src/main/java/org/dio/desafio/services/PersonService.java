@@ -1,6 +1,7 @@
 package org.dio.desafio.services;
 
 import org.dio.desafio.dto.requests.PersonDTO;
+import org.dio.desafio.exceptions.PersonConflictException;
 import org.dio.desafio.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class PersonService {
         this.repository = repository;
     }
 
-    public String save(PersonDTO personDTO) {
+    public String save(PersonDTO personDTO) throws PersonConflictException {
 
     }
 }
