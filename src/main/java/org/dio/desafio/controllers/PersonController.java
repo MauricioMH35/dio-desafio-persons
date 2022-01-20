@@ -6,14 +6,12 @@ import org.dio.desafio.exceptions.PersonConflictException;
 import org.dio.desafio.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RestController("/v1/persons")
+@RestController
+@RequestMapping("/v1/persons")
 public class PersonController {
 
     private final PersonService service;
@@ -23,10 +21,21 @@ public class PersonController {
         this.service = service;
     }
 
+    @GetMapping
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDTO test() {
+        return ResponseDTO.builder()
+                .message("Hello World!")
+                .build();
+    }
+
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseDTO save(@RequestBody @Valid PersonDTO personDTO) throws PersonConflictException {
         return service.save(personDTO);
     }
+
+
 
 }
