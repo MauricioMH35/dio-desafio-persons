@@ -84,7 +84,7 @@ public class PersonServiceTest {
 
     @Test
     @DisplayName("When Save Is Thrown Person Conflict Exception Then Assertion Succeeded")
-    public void whenSaveIsThrownPersonConflictExceptionThenAssertionSucceeded() {
+    public void personConflictException_Test() {
         Exception exception = assertThrows(PersonConflictException.class, () -> {
             when(repository.findByCpf(personDTO.getCpf())).thenReturn(person);
             service.save(personDTO);
