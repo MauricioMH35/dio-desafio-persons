@@ -22,6 +22,7 @@ public class PersonUtil {
                 .cpf(PERSON_CPF)
                 .birthDate(BIRTH_DATE.toString())
                 .phones(Collections.singletonList(PhoneUtil.createDTO()))
+                .isActive(true)
                 .build();
     }
 
@@ -33,6 +34,7 @@ public class PersonUtil {
                 .cpf(PERSON_CPF)
                 .birthDate(BIRTH_DATE)
                 .phones(Collections.singletonList(PhoneUtil.createEntity()))
+                .isActive(true)
                 .build();
     }
 
