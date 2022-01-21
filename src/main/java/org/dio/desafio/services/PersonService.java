@@ -3,7 +3,6 @@ package org.dio.desafio.services;
 import lombok.AllArgsConstructor;
 import org.dio.desafio.dto.mappers.PersonMapper;
 import org.dio.desafio.dto.requests.PersonDTO;
-import org.dio.desafio.dto.requests.PhoneDTO;
 import org.dio.desafio.dto.responses.ResponseDTO;
 import org.dio.desafio.entities.Person;
 import org.dio.desafio.exceptions.PersonConflictException;
@@ -11,9 +10,6 @@ import org.dio.desafio.exceptions.PersonNotFoundException;
 import org.dio.desafio.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -47,4 +43,11 @@ public class PersonService {
                 .message(message)
                 .build();
     }
+
+    public PersonDTO findById(Long id) throws PersonNotFoundException {
+        Person found = repository.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException(id));
+        return mapper.toDTO(found);
+    }
+
 }
