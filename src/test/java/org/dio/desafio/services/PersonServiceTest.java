@@ -75,7 +75,8 @@ public class PersonServiceTest {
     }
 
     @Test
-    public void findById() throws PersonNotFoundException {
+    @DisplayName("When Find By Id Person Then Return PersonDTO Succeeded")
+    public void findById_Test() throws PersonNotFoundException {
         Person found = repository.findById(1L)
                 .orElseThrow(() -> new PersonNotFoundException(1L));
         assertEquals(person, found);
