@@ -27,4 +27,10 @@ public class PersonController {
         return service.save(personDTO);
     }
 
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.FOUND)
+    public PersonDTO findByID(@PathVariable Long id) throws PersonNotFoundException {
+        return service.findById(id);
+    }
+
 }
