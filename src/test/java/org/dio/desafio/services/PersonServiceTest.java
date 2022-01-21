@@ -7,7 +7,6 @@ import org.dio.desafio.entities.Person;
 import org.dio.desafio.exceptions.PersonConflictException;
 import org.dio.desafio.exceptions.PersonNotFoundException;
 import org.dio.desafio.repositories.PersonRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,8 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.Optional;
 
@@ -59,8 +56,8 @@ public class PersonServiceTest {
     }
 
     @Test
-    @DisplayName("Expected Return Message When Person Save")
-    public void save() throws PersonConflictException {
+    @DisplayName("When Save Person Then Return ResponseDTO Succeeded")
+    public void save_Test() throws PersonConflictException {
         // Should return null when searching for person using CPF
         String cpf = person.getCpf();
         Person existPerson = repository.findByCpf(cpf);
