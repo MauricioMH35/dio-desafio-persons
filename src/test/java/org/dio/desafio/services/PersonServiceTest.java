@@ -5,6 +5,7 @@ import org.dio.desafio.dto.requests.PersonDTO;
 import org.dio.desafio.dto.responses.ResponseDTO;
 import org.dio.desafio.entities.Person;
 import org.dio.desafio.exceptions.PersonConflictException;
+import org.dio.desafio.exceptions.PersonNotFoundException;
 import org.dio.desafio.repositories.PersonRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
@@ -26,6 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class PersonServiceTest {
 
     @Mock
@@ -46,9 +50,12 @@ public class PersonServiceTest {
         person = createEntity();
         personDTO = createDTO();
 
+        when(repository.findById(1L)).thenReturn(Optional.of(person));
         when(repository.findByCpf(personDTO.getCpf())).thenReturn(null);
-        when((repository.save(any(Person.class)))).thenReturn(person);
+        when(repository.save(any(Person.class))).thenReturn(person);
+
         when(mapper.toEntity(any(PersonDTO.class))).thenReturn(person);
+        when(mapper.toDTO(any(Person.class))).thenReturn(personDTO);
     }
 
     @Test
@@ -68,6 +75,13 @@ public class PersonServiceTest {
         String expectedResponse = createResponseMessage(
                 "Person successfully created with \'id\' ", 1L).getMessage();
         assertEquals(expectedResponse, response);
+    }
+
+    @Test
+    public void findById() throws PersonNotFoundException {
+        Person found = repository.findById(1L)
+                .orElseThrow(() -> new PersonNotFoundException(1L));
+        assertEquals(person, found);
     }
 
     private ResponseDTO createResponseMessage(String message, Long id) {
