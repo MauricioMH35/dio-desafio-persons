@@ -96,6 +96,20 @@ public class PersonServiceTest {
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
     }
+
+    @Test
+    @DisplayName("When Find By Id Is Thrown Person Not Found Exception Then Assertion Succeeded")
+    public void whenFindByIdIsThrownPersonNotFoundExceptionThenAssertionSucceeded() {
+        Long id = 2L;
+        Exception exception = assertThrows(PersonNotFoundException.class, () -> {
+            service.findById(id);
+        });
+
+        String expectedMessage = "Could not found the person with the \'id\' (" + id + ')';
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
     private ResponseDTO createResponseMessage(String message, Long id) {
         return ResponseDTO.builder()
                 .message(message + id)
