@@ -97,7 +97,7 @@ public class PersonServiceTest {
 
     @Test
     @DisplayName("When Find By Id Is Thrown Person Not Found Exception Then Assertion Succeeded")
-    public void whenFindByIdIsThrownPersonNotFoundExceptionThenAssertionSucceeded() {
+    public void personNotFoundException_Test() {
         Long id = 2L;
         Exception exception = assertThrows(PersonNotFoundException.class, () -> {
             service.findById(id);
