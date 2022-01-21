@@ -1,5 +1,6 @@
 package org.dio.desafio.services;
 
+import com.fasterxml.jackson.core.format.DataFormatDetector;
 import lombok.AllArgsConstructor;
 import org.dio.desafio.dto.mappers.PersonMapper;
 import org.dio.desafio.dto.requests.PersonDTO;
@@ -11,6 +12,8 @@ import org.dio.desafio.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,6 +53,18 @@ public class PersonService {
         return persons.stream()
                 .map(mapper::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public ResponseDTO updateById(Long id, PersonDTO personDTO) throws PersonNotFoundException {
+        Person found = repository.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException(id));
+
+        personDTO.setId(id);
+        Person updated = mapper.toEntity(personDTO);
+        repository.save(updated);
+
+        return createGenericResponseMessage(
+                "Successfully updated data " + updated.getFirstname() + " on \'id\' (" + id + ')');
     }
 
     private ResponseDTO createResponseMessage(String message, Long id) {

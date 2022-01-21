@@ -40,4 +40,11 @@ public class PersonController {
         return service.findAll();
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseDTO updateById(@PathVariable Long id, @RequestBody @Valid PersonDTO personDTO)
+            throws PersonNotFoundException {
+        return service.updateById(id, personDTO);
+    }
+
 }

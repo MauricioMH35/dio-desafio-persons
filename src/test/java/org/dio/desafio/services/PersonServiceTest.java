@@ -23,8 +23,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.dio.desafio.utils.PersonUtil.createDTO;
-import static org.dio.desafio.utils.PersonUtil.createEntity;
+import static org.dio.desafio.utils.PersonUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -117,6 +116,30 @@ public class PersonServiceTest {
     }
 
     @Test
+    @DisplayName("When Update By Id Person Then Return ResponseDTO Succeeded")
+    public void updateById_Test() throws PersonNotFoundException {
+        PersonDTO personRequest = createNewDTO();
+
+        // Should return the Person found using the Id
+        Person found = repository.findById(1L)
+                .orElseThrow(() -> new PersonNotFoundException(1L));
+        assertEquals(person, found);
+
+        // Should return entity to DTO conversion
+        Person expectedConvetedPerson = createNewEntity();
+        when(mapper.toEntity(any(PersonDTO.class))).thenReturn(createNewEntity());
+        Person converted = mapper.toEntity(personRequest);
+        assertEquals(expectedConvetedPerson, converted);
+
+        // Should return message successfully update person by id
+        when(repository.save(any(Person.class))).thenReturn(createNewEntity());
+        String actualResponse = service.updateById(1L, personRequest).getMessage();
+        String expectedResponse = createGenericResponseMessage(
+                "Successfully updated data Elena on \'id\' (1)").getMessage();
+        assertEquals(expectedResponse, actualResponse);
+    }
+
+    @Test
     @DisplayName("When Save Is Thrown Person Conflict Exception Then Assertion Succeeded")
     public void personConflictException_Test() {
         // Should return the exception when trying to save a person with CPF already registred
@@ -147,6 +170,23 @@ public class PersonServiceTest {
     }
 
     @Test
+    @DisplayName("When Update By Id Is Thrown Person Not Found Exception Then Assertion Succeeded")
+    public void personNotFoundException_TestUpdateById() {
+        // Should return an exception when trying to find a person with non-existing Id
+        Long id = 2L;
+        Exception exception = assertThrows(PersonNotFoundException.class, () -> {
+            service.updateById(id, createNewDTO());
+        });
+
+        // Should check the exception message
+        String expectedMessage = "Could not found the person with the \'id\' (" + id + ')';
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+
+
+    @Test
     @DisplayName("When Find All Is Thrown Person Not Found Exception Then Assertion Succeeded")
     public void personNotFoundException_TestFindAll() {
         // Should return an exception when not found persons
@@ -164,6 +204,12 @@ public class PersonServiceTest {
     private ResponseDTO createResponseMessage(String message, Long id) {
         return ResponseDTO.builder()
                 .message(message + id)
+                .build();
+    }
+
+    private ResponseDTO createGenericResponseMessage(String message) {
+        return ResponseDTO.builder()
+                .message(message)
                 .build();
     }
 }

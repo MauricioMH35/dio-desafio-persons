@@ -38,4 +38,28 @@ public class PersonUtil {
                 .build();
     }
 
+    public static PersonDTO createNewDTO() {
+        return PersonDTO.builder()
+                .id(PERSON_ID)
+                .firstname("Elena")
+                .lastname("Sampaio")
+                .cpf(PERSON_CPF)
+                .birthDate(BIRTH_DATE.toString())
+                .phones(Collections.singletonList(PhoneUtil.createDTO()))
+                .isActive(true)
+                .build();
+    }
+
+    public static Person createNewEntity() {
+        return Person.builder()
+                .id(PERSON_ID)
+                .firstname("Elena")
+                .lastname("Sampaio")
+                .cpf(PERSON_CPF)
+                .birthDate(BIRTH_DATE)
+                .phones(Collections.singletonList(PhoneUtil.createEntity()))
+                .isActive(true)
+                .build();
+    }
+
 }
