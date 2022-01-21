@@ -17,7 +17,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +25,7 @@ import java.util.stream.Collectors;
 import static org.dio.desafio.utils.PersonUtil.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -140,6 +139,21 @@ public class PersonServiceTest {
     }
 
     @Test
+    @DisplayName("When Delete By Id Person Then Succeeded")
+    public void deleteById() throws PersonNotFoundException {
+        // Should return the Person found using the Id
+        Person found = repository.findById(1L)
+                .orElseThrow(() -> new PersonNotFoundException(1L));
+        assertEquals(person, found);
+
+        // Should test if deleted person by id
+        Person person1 = createEntity();
+        when(repository.findById(1L)).thenReturn(Optional.of(person1));
+        service.deleteById(1L);
+        verify(repository, times(1)).deleteById(1L);
+    }
+
+    @Test
     @DisplayName("When Save Is Thrown Person Conflict Exception Then Assertion Succeeded")
     public void personConflictException_Test() {
         // Should return the exception when trying to save a person with CPF already registred
@@ -183,7 +197,6 @@ public class PersonServiceTest {
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
     }
-
 
 
     @Test

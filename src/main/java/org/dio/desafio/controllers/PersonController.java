@@ -1,9 +1,7 @@
 package org.dio.desafio.controllers;
 
-import jdk.jshell.Snippet;
 import lombok.AllArgsConstructor;
 import org.dio.desafio.dto.requests.PersonDTO;
-import org.dio.desafio.dto.requests.PhoneDTO;
 import org.dio.desafio.dto.responses.ResponseDTO;
 import org.dio.desafio.exceptions.PersonConflictException;
 import org.dio.desafio.exceptions.PersonNotFoundException;
@@ -47,4 +45,9 @@ public class PersonController {
         return service.updateById(id, personDTO);
     }
 
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteById(@PathVariable Long id) throws PersonNotFoundException {
+        service.deleteById(id);
+    }
 }
