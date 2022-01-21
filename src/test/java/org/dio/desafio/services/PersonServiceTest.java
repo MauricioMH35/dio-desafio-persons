@@ -77,19 +77,26 @@ public class PersonServiceTest {
     @Test
     @DisplayName("When Find By Id Person Then Return PersonDTO Succeeded")
     public void findById_Test() throws PersonNotFoundException {
+        // Should return the Person found using the Id
         Person found = repository.findById(1L)
                 .orElseThrow(() -> new PersonNotFoundException(1L));
         assertEquals(person, found);
+        // Should return entity to DTO conversion
+        // Should return the person found by Id
+        // Should return the list of people
+        // Should return the list PersonDTO
     }
 
     @Test
     @DisplayName("When Save Is Thrown Person Conflict Exception Then Assertion Succeeded")
     public void personConflictException_Test() {
+        // Should return the exception when trying to save a person with CPF already registred
         Exception exception = assertThrows(PersonConflictException.class, () -> {
             when(repository.findByCpf(personDTO.getCpf())).thenReturn(person);
             service.save(personDTO);
         });
 
+        // Should check the exception message
         String expectedMessage = "Registration of an existing person!";
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
@@ -98,11 +105,13 @@ public class PersonServiceTest {
     @Test
     @DisplayName("When Find By Id Is Thrown Person Not Found Exception Then Assertion Succeeded")
     public void personNotFoundException_Test() {
+        // Should return an exception when trying to find a person with non-existing Id
         Long id = 2L;
         Exception exception = assertThrows(PersonNotFoundException.class, () -> {
             service.findById(id);
         });
 
+        // Should check the exception message
         String expectedMessage = "Could not found the person with the \'id\' (" + id + ')';
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
