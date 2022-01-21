@@ -22,7 +22,7 @@ public class PersonUtil {
                 .lastname(LAST_NAME)
                 .cpf(PERSON_CPF)
                 .birthDate(BIRTH_DATE.toString())
-//                .phones(Collections.singletonList(PhoneUtil.createDTO()))
+                .phones(Collections.singletonList(PhoneUtil.createDTO()))
                 .build();
     }
 
@@ -33,7 +33,7 @@ public class PersonUtil {
                 .lastname(LAST_NAME)
                 .cpf(PERSON_CPF)
                 .birthDate(BIRTH_DATE)
-//                .phones(Collections.singletonList(PhoneUtil.createEntity()))
+                .phones(Collections.singletonList(PhoneUtil.createEntity()))
                 .build();
     }
 

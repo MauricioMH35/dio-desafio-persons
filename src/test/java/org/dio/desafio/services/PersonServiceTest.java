@@ -14,14 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import static org.dio.desafio.utils.PersonUtil.createDTO;
 import static org.dio.desafio.utils.PersonUtil.createEntity;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -39,53 +35,41 @@ public class PersonServiceTest {
 
     private Person person;
     private PersonDTO personDTO;
-    private List<PersonDTO> personsDTO;
-    private ResponseDTO responseSavedDTO;
-    private ResponseDTO responseUpdadedDTO;
-    private ResponseDTO responseDeletedDTO;
-    private ResponseDTO responsePermanentDeleteDTO;
+
+    private ResponseDTO responseSaveDTO;
 
     @BeforeEach
     public void setup() throws Exception {
         person = createEntity();
         personDTO = createDTO();
-        personsDTO = Collections.singletonList(personDTO);
 
-        responseSavedDTO = createResponseMessage("Person successfully created with \'id\' ", 1L);
-        responseUpdadedDTO = createResponseMessage("Person successfully updated with \'id\' ", 1L);
-        responseDeletedDTO = createResponseMessage("Disabled person with \'id\' ", 1L);
-        responsePermanentDeleteDTO = createResponseMessage("Deleted person with \'id\' ", 1L);
+        responseSaveDTO = createResponseMessage("Person successfully created with \'id\' ", 1L);
 
-        // Person Mapper process
-        when(mapper.toEntity(personDTO)).thenReturn(person);
-
-        // Save process
+        when(repository.findByCpf(any(String.class))).thenReturn(null);
         when(repository.save(any(Person.class))).thenReturn(person);
-        when(repository.findByCpf(person.getCpf())).thenReturn(null);
-        when(service.save(any(PersonDTO.class))).thenReturn(responseSavedDTO);
 
-        // Find By Id process
-        when(repository.findById(1L)).thenReturn(Optional.of(person));
-
-        // Find All process
-        when(repository.findAll()).thenReturn(Collections.singletonList(person));
+        when(mapper.toDTO(any(Person.class))).thenReturn(personDTO);
     }
 
     @Test
     @DisplayName("Expected Return Message When Person Save")
     public void save() throws PersonConflictException {
-        // Tests if the person does not exist in the database
-        Person foundByCpf = repository.findByCpf(person.getCpf());
-        assertEquals(foundByCpf, null);
+        // Should return null when searching for person using CPF
+        Person exitPerson = repository.findByCpf(personDTO.getCpf());
+        assertNull(exitPerson);
 
-        // Tests Entity to DTO conversion
-        PersonDTO expectedDTO = createDTO();
-        PersonDTO dto = mapper.toDTO(person);
-        assertEquals(expectedDTO, dto);
+        // Must convert an entity to DTO
+        PersonDTO expectedMapper = mapper.toDTO(person);
+        assertEquals(expectedMapper, personDTO);
 
-        // Tests the return message
-        ResponseDTO message = service.save(personDTO);
-        assertEquals(responseSavedDTO, message);
+        // Must save and the entity must be the same as the saved entity
+        Person expectedSaved = repository.save(person);
+        assertEquals(expectedSaved, person);
+
+        // Should show the message that it has been saved
+        String expectedResponse = responseSaveDTO.getMessage();
+        String message = "Person successfully created with \'id\' 1";
+        assertEquals(expectedResponse, message);
     }
 
     private ResponseDTO createResponseMessage(String message, Long id) {
