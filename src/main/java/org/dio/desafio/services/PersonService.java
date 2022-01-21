@@ -1,6 +1,5 @@
 package org.dio.desafio.services;
 
-import com.fasterxml.jackson.core.format.DataFormatDetector;
 import lombok.AllArgsConstructor;
 import org.dio.desafio.dto.mappers.PersonMapper;
 import org.dio.desafio.dto.requests.PersonDTO;
@@ -12,8 +11,6 @@ import org.dio.desafio.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,7 +23,7 @@ public class PersonService {
     private final PersonMapper mapper;
 
     public ResponseDTO save(PersonDTO personDTO) throws PersonConflictException {
-        if(repository.findByCpf(personDTO.getCpf()) != null)
+        if (repository.findByCpf(personDTO.getCpf()) != null)
             throw new PersonConflictException();
 
         Person mapped = mapper.toEntity(personDTO);
@@ -47,7 +44,7 @@ public class PersonService {
 
     public List<PersonDTO> findAll() throws PersonNotFoundException {
         List<Person> persons = repository.findAll();
-        if(persons.isEmpty())
+        if (persons.isEmpty())
             throw new PersonNotFoundException();
 
         return persons.stream()
@@ -65,6 +62,13 @@ public class PersonService {
 
         return createGenericResponseMessage(
                 "Successfully updated data " + updated.getFirstname() + " on \'id\' (" + id + ')');
+    }
+
+    public void deleteById(Long id) throws PersonNotFoundException {
+        repository.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException(id));
+
+        repository.deleteById(id);
     }
 
     private ResponseDTO createResponseMessage(String message, Long id) {
