@@ -6,6 +6,7 @@ import org.dio.desafio.dto.responses.ResponseDTO;
 import org.dio.desafio.entities.Person;
 import org.dio.desafio.exceptions.PersonConflictException;
 import org.dio.desafio.repositories.PersonRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,11 +14,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import java.util.Optional;
 
 import static org.dio.desafio.utils.PersonUtil.createDTO;
 import static org.dio.desafio.utils.PersonUtil.createEntity;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -33,43 +37,37 @@ public class PersonServiceTest {
     @InjectMocks
     private PersonService service;
 
+
     private Person person;
     private PersonDTO personDTO;
 
-    private ResponseDTO responseSaveDTO;
-
     @BeforeEach
-    public void setup() throws Exception {
+    public void setup() {
         person = createEntity();
         personDTO = createDTO();
 
-        responseSaveDTO = createResponseMessage("Person successfully created with \'id\' ", 1L);
-
-        when(repository.findByCpf(any(String.class))).thenReturn(null);
-        when(repository.save(any(Person.class))).thenReturn(person);
-
-        when(mapper.toDTO(any(Person.class))).thenReturn(personDTO);
+        when(repository.findByCpf(personDTO.getCpf())).thenReturn(null);
+        when((repository.save(any(Person.class)))).thenReturn(person);
+        when(mapper.toEntity(any(PersonDTO.class))).thenReturn(person);
     }
 
     @Test
     @DisplayName("Expected Return Message When Person Save")
     public void save() throws PersonConflictException {
         // Should return null when searching for person using CPF
-        Person exitPerson = repository.findByCpf(personDTO.getCpf());
-        assertNull(exitPerson);
-
-        // Must convert an entity to DTO
-        PersonDTO expectedMapper = mapper.toDTO(person);
-        assertEquals(expectedMapper, personDTO);
+        String cpf = person.getCpf();
+        Person existPerson = repository.findByCpf(cpf);
+        assertNull(existPerson);
 
         // Must save and the entity must be the same as the saved entity
-        Person expectedSaved = repository.save(person);
-        assertEquals(expectedSaved, person);
+        Person saved = repository.save(person);
+        assertEquals(createEntity(), saved);
 
         // Should show the message that it has been saved
-        String expectedResponse = responseSaveDTO.getMessage();
-        String message = "Person successfully created with \'id\' 1";
-        assertEquals(expectedResponse, message);
+        String response = service.save(createDTO()).getMessage();
+        String expectedResponse = createResponseMessage(
+                "Person successfully created with \'id\' ", 1L).getMessage();
+        assertEquals(expectedResponse, response);
     }
 
     private ResponseDTO createResponseMessage(String message, Long id) {
@@ -77,5 +75,4 @@ public class PersonServiceTest {
                 .message(message + id)
                 .build();
     }
-
 }
