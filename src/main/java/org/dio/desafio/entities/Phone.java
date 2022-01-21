@@ -5,8 +5,7 @@ import org.dio.desafio.enums.PhoneType;
 
 import javax.persistence.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -21,6 +20,7 @@ public class Phone {
     private Long id;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private PhoneType type;
 
     @Column(nullable = false)

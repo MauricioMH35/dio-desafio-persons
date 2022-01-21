@@ -19,11 +19,10 @@ public class PhoneDTO {
 
     private Long id;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private PhoneType type;
 
-    @NotNull
-    @Size(min = 13, max = 14)
+    @Size(min = 11, max = 14)
     private String number;
+
 }
