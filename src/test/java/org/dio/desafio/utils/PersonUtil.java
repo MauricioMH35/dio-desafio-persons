@@ -2,7 +2,6 @@ package org.dio.desafio.utils;
 
 import org.dio.desafio.dto.requests.PersonDTO;
 import org.dio.desafio.entities.Person;
-import org.dio.desafio.enums.PhoneType;
 
 import java.time.LocalDate;
 import java.util.Collections;
