@@ -84,6 +84,18 @@ public class PersonServiceTest {
         assertEquals(person, found);
     }
 
+    @Test
+    @DisplayName("When Save Is Thrown Person Conflict Exception Then Assertion Succeeded")
+    public void whenSaveIsThrownPersonConflictExceptionThenAssertionSucceeded() {
+        Exception exception = assertThrows(PersonConflictException.class, () -> {
+            when(repository.findByCpf(personDTO.getCpf())).thenReturn(person);
+            service.save(personDTO);
+        });
+
+        String expectedMessage = "Registration of an existing person!";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
     private ResponseDTO createResponseMessage(String message, Long id) {
         return ResponseDTO.builder()
                 .message(message + id)
