@@ -17,7 +17,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.dio.desafio.utils.PersonUtil.createDTO;
 import static org.dio.desafio.utils.PersonUtil.createEntity;
@@ -49,6 +53,7 @@ public class PersonServiceTest {
 
         when(repository.findById(1L)).thenReturn(Optional.of(person));
         when(repository.findByCpf(personDTO.getCpf())).thenReturn(null);
+        when(repository.findAll()).thenReturn(Collections.singletonList(person));
         when(repository.save(any(Person.class))).thenReturn(person);
 
         when(mapper.toEntity(any(PersonDTO.class))).thenReturn(person);
@@ -81,10 +86,34 @@ public class PersonServiceTest {
         Person found = repository.findById(1L)
                 .orElseThrow(() -> new PersonNotFoundException(1L));
         assertEquals(person, found);
+
         // Should return entity to DTO conversion
+        PersonDTO converted = mapper.toDTO(found);
+        assertEquals(personDTO, converted);
+
         // Should return the person found by Id
+        PersonDTO actualPerson = service.findById(1L);
+        PersonDTO expectedPerson = personDTO;
+        assertEquals(expectedPerson, actualPerson);
+    }
+
+    @Test
+    @DisplayName("When Find All Persons Then Return List PersonDTOs Succeeded")
+    public void findAll_Test() throws PersonNotFoundException {
         // Should return the list of people
+        List<Person> persons = repository.findAll();
+        assertEquals(persons, Collections.singletonList(person));
+
+        // Should return entity to DTO conversion list
+        List<PersonDTO> personsDTO = persons.stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
+        assertEquals(personsDTO, Collections.singletonList(personDTO));
+
         // Should return the list PersonDTO
+        List<PersonDTO> actualPersons = service.findAll();
+        List<PersonDTO> expectedPersons = personsDTO;
+        assertEquals(expectedPersons, actualPersons);
     }
 
     @Test
@@ -113,6 +142,21 @@ public class PersonServiceTest {
 
         // Should check the exception message
         String expectedMessage = "Could not found the person with the \'id\' (" + id + ')';
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    @DisplayName("When Find All Is Thrown Person Not Found Exception Then Assertion Succeeded")
+    public void personNotFoundException_TestFindAll() {
+        // Should return an exception when not found persons
+        Exception exception = assertThrows(PersonNotFoundException.class, () -> {
+            when(repository.findAll()).thenReturn(Collections.emptyList());
+            service.findAll();
+        });
+
+        // Should check the exception message
+        String expectedMessage = "Could not find the requested data";
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
     }

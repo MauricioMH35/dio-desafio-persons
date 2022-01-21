@@ -14,4 +14,8 @@ public class PersonNotFoundException extends Exception {
         super("Could not found the person with the \'data\' (" + data + ")");
     }
 
+    public PersonNotFoundException() {
+        super("Could not find the requested data");
+    }
+
 }

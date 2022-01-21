@@ -1,5 +1,6 @@
 package org.dio.desafio.controllers;
 
+import jdk.jshell.Snippet;
 import lombok.AllArgsConstructor;
 import org.dio.desafio.dto.requests.PersonDTO;
 import org.dio.desafio.dto.requests.PhoneDTO;
@@ -31,6 +32,12 @@ public class PersonController {
     @ResponseStatus(HttpStatus.FOUND)
     public PersonDTO findByID(@PathVariable Long id) throws PersonNotFoundException {
         return service.findById(id);
+    }
+
+    @GetMapping
+    @ResponseStatus(HttpStatus.FOUND)
+    public List<PersonDTO> findAll() throws PersonNotFoundException {
+        return service.findAll();
     }
 
 }

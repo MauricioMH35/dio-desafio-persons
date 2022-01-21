@@ -11,6 +11,9 @@ import org.dio.desafio.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class PersonService {
@@ -33,6 +36,22 @@ public class PersonService {
         return response;
     }
 
+    public PersonDTO findById(Long id) throws PersonNotFoundException {
+        Person found = repository.findById(id)
+                .orElseThrow(() -> new PersonNotFoundException(id));
+        return mapper.toDTO(found);
+    }
+
+    public List<PersonDTO> findAll() throws PersonNotFoundException {
+        List<Person> persons = repository.findAll();
+        if(persons.isEmpty())
+            throw new PersonNotFoundException();
+
+        return persons.stream()
+                .map(mapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
     private ResponseDTO createResponseMessage(String message, Long id) {
         return ResponseDTO.builder()
                 .message(message + id)
@@ -43,12 +62,6 @@ public class PersonService {
         return ResponseDTO.builder()
                 .message(message)
                 .build();
-    }
-
-    public PersonDTO findById(Long id) throws PersonNotFoundException {
-        Person found = repository.findById(id)
-                .orElseThrow(() -> new PersonNotFoundException(id));
-        return mapper.toDTO(found);
     }
 
 }
