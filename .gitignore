@@ -33,4 +33,4 @@ build/
 .vscode/
 
 ### Archives ###
-.sql
+*.sql
