@@ -1,0 +1,131 @@
+{
+  "info": {
+    "_postman_id": "b476ae08-fd7a-4151-8127-712af352d40d",
+    "name": "Persons",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Save (PUT)",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"firstname\": \"Fulano\",\r\n    \"lastname\": \"Beltrano\",\r\n    \"cpf\": \"122.923.655-45\",\r\n    \"birthDate\": \"04-11-1994\",\r\n    \"phones\": [{\r\n        \"type\": \"MOBILE\",\r\n        \"number\": \"119842636599\"\r\n    }],\r\n    \"isActive\": true\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/persons",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "persons"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Find By Id (GET)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/persons/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "persons",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Find All (GET)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/persons/",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "persons",
+            ""
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update By Id (PUT)",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"firstname\": \"Bianca\",\r\n    \"lastname\": \"Alves\",\r\n    \"cpf\": \"122.923.655-45\",\r\n    \"birthDate\": \"21-05-1995\",\r\n    \"phones\": [{\r\n        \"type\": \"MOBILE\",\r\n        \"number\": \"119842636599\"\r\n    }],\r\n    \"isActive\": true\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/v1/persons/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "persons",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete By Id (DELETE)",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/v1/persons/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "v1",
+            "persons",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
